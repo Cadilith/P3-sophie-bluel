@@ -1,19 +1,15 @@
-// fetch works data from API
+// fetch works data from API and display it
 fetch("http://localhost:5678/api/works")
 .then((response) => response.json())
-.then((data) => displayConsole(data))
 .then((data) => displayGallery(data))
 
-
-function displayConsole(data) {
-    console.log(data);
-    return data;
-}
-
+//function to display the gallery
 function displayGallery(data) {
-    //parent element
+
+    //select parent element
     const gallery = document.querySelector(".gallery");
 
+    //display all works in array
     for (let i = 0; i < data.length; i++) {
         const work = data[i];
 
