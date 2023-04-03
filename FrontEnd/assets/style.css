@@ -134,7 +134,7 @@ li:hover {
 	margin: 50px 0;
 }
 
-.filterButton {
+.filterButton, .filterButtonAll {
 	padding: 10px 20px;
 	border-radius: 60px;
 	border: #1D6154 1px solid;
@@ -146,7 +146,7 @@ li:hover {
 	text-align: center;
 }
 
-.filterButton:hover, .filterButton:focus {
+.filterButton:hover, .filterButton:focus, .filterButtonAll:hover, .filterButtonAll:focus {
 	background-color: #1D6154;
 	color: #FFFFFF;
 }
