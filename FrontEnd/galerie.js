@@ -12,21 +12,20 @@ fetch(baseApiUrl + "works")
     categories = Array.from(listOfCategories);
     //display all works
     displayGallery(worksData);  
-    //display filter buttons
-    displayFilterButtons(categories);
+    //Filter functionnalities
+    displayFilter(categories);
 })
 
 
-
-//display the gallery
+//display gallery
 function displayGallery(data) {
 
     //select parent element
     const gallery = document.querySelector(".gallery");
 
     //show all works in array
-    for (let index = 0; index < data.length; index++) {
-        const work = data[index];
+    for (let i = 0; i < data.length; i++) {
+        const work = data[i];
         
         //create tags
         const workCard = document.createElement("figure");
@@ -44,13 +43,23 @@ function displayGallery(data) {
     }
 }
 
-//create button all
-function allButton() {
+// ********** Filter***********
 
-    const filter = document.querySelector(".filter");
+//display filter buttons
+function displayFilter(categories) {
+    buttonDisplayAll();
+    filterButtons(categories);
+    functionFilter();
+};
+
+//create button "Tous"
+function buttonDisplayAll() {
+
+    const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
     const button = document.createElement("button");
     
     button.innerText = "Tous";
+    button.dataset.category = "Tous";
     button.className = "filterButton";
     filter.appendChild(button);
 }
@@ -58,7 +67,7 @@ function allButton() {
 //create filter buttons
 function filterButtons(categories) {
 
-    const filter = document.querySelector(".filter");
+    const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
     categories.forEach(categorie => {
         createButtonFilter(categorie, filter);
     });
@@ -68,18 +77,38 @@ function createButtonFilter(categorie, filter) {
     const button = document.createElement("button");
     button.innerText = categorie;
     button.className = "filterButton";
+    button.dataset.category = categorie;
     filter.appendChild(button);
 }
 
-//display filter buttons
-function displayFilterButtons(categories) {
-    allButton();
-    filterButtons(categories);
-    //Event listener filter buttons
-    const filterButton = document.getElementsByClassName("filterButton");
-    filterButton.addEventListener("click", function() {
-        ////////// continuer ICI
+// Gallery filter
+function functionFilter () {
+    const filterButtons = document.querySelectorAll(".filterButton");
+    const figures = document.querySelectorAll(".workCard");
+
+    function toggleActiveCategory(i) {
+        filterButtons.forEach((i) => {
+            i.classList.remove("active");
+        }),
+            i.classList.add("active");
+    }
+
+    function toggleProjects(datasetCategory) {
+        if ("Tous" === datasetCategory)
+            figures.forEach(figure => {
+                figure.style.display = "block";
+            });
+        else
+            figures.forEach(figure => {
+                figure.dataset.category === datasetCategory
+                    ? (figure.style.display = "block")
+                    : (figure.style.display = "none");
+            });
+    }
+
+    for (let i = 0; i < filterButtons.length; i++)
+        filterButtons[i].addEventListener("click", function () {
+            toggleActiveCategory(filterButtons[i]),
+                toggleProjects(filterButtons[i].dataset.category);
         });
-};
-
-
+}
