@@ -1,7 +1,7 @@
 const baseApiUrl = "http://localhost:5678/api/";
 
 // fetch works data from API and display it
-fetch(baseApiUrl + "works")
+fetch(`${baseApiUrl}works`)
 .then((response) => response.json())
 .then((worksData) => {
     //get list of categories
