@@ -14,6 +14,7 @@ fetch(`${baseApiUrl}works`)
     displayGallery(worksData);  
     //Filter functionnalities
     displayFilter(categories);
+    adminUserMode();
 })
 
 
@@ -111,4 +112,37 @@ function functionFilter () {
             toggleActiveCategory(filterButtons[i]),
                 toggleProjects(filterButtons[i].dataset.category);
         });
+}
+
+//********Display admin mode if token is found in session storage******
+function adminUserMode() {
+    if (sessionStorage.getItem("token")) {
+        console.log("connecté")// DELETE LATER TEST PURPOSE
+        //Hide filter
+        const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
+        filter.style.display = "none";
+        //change login to logout
+        const logBtn = document.getElementById("logBtn");
+        logBtn.innerText = "logout";
+        //display top menu bar
+        const body = document.querySelector("body");
+        const topMenu = document.createElement("div");
+        const publishBtn = document.createElement("button");
+        const editMode = document.createElement("p");
+
+        topMenu.className = "topMenu";
+        editMode.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>Mode édition`;
+        publishBtn.innerText = "Publier les changements";
+        
+        body.appendChild(topMenu);
+        body.insertAdjacentElement ("beforebegin", topMenu);
+        topMenu.append(editMode, publishBtn);
+        //edit buttons
+        const editBtn = `<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i>Modifier</p>`;
+        document.querySelector("#introduction img").insertAdjacentHTML("afterend", editBtn);
+        document.querySelector("#introduction article").insertAdjacentHTML("afterbegin", editBtn);
+        document.querySelector("#portfolio h2").insertAdjacentHTML("afterend", editBtn);
+
+
+    }
 }
