@@ -1,32 +1,29 @@
 const baseApiUrl = "http://localhost:5678/api/";
 
 // fetch works data from API and display it
-fetch(baseApiUrl + "works")
+fetch(`${baseApiUrl}works`)
 .then((response) => response.json())
 .then((worksData) => {
     //get list of categories
-    let listOfCategories = new Set();
+    let nodeListOfCategories = new Set();
     worksData.forEach(work => {
-        listOfCategories.add(work.category.name);
+        nodeListOfCategories.add(work.category.name);
     });
-    categories = Array.from(listOfCategories);
+    categories = Array.from(nodeListOfCategories);
     //display all works
+    const filter = document.querySelector(".filter");
     displayGallery(worksData);  
-    //Filter functionnalities
-    displayFilter(categories);
+    //Filter functionnality
+    categoryFilter(categories, filter);
+    //administrator mode
+    adminUserMode();
 })
 
-
-//display gallery
+//*******display gallery*******
 function displayGallery(data) {
-
-    //select parent element
-    const gallery = document.querySelector(".gallery");
-
     //show all works in array
     for (let i = 0; i < data.length; i++) {
         const work = data[i];
-        
         //create tags
         const workCard = document.createElement("figure");
         const workImage = document.createElement("img");
@@ -36,9 +33,8 @@ function displayGallery(data) {
         workTitle.innerText = work.title;
         workCard.dataset.category = work.category.name;
         workCard.className = "workCard";
-
         //references to DOM    
-        gallery.appendChild(workCard);
+        document.querySelector(".gallery").appendChild(workCard);
         workCard.append(workImage,workTitle);
     }
 }
@@ -46,28 +42,14 @@ function displayGallery(data) {
 // ********** Filter***********
 
 //display filter buttons
-function displayFilter(categories) {
-    buttonDisplayAll();
-    filterButtons(categories);
+function categoryFilter(categories, filter) {
+    createButtonFilter("Tous", filter);
+    filterButtons(categories, filter);
     functionFilter();
 };
 
-//create button "Tous"
-function buttonDisplayAll() {
-
-    const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
-    const button = document.createElement("button");
-    
-    button.innerText = "Tous";
-    button.dataset.category = "Tous";
-    button.className = "filterButton";
-    filter.appendChild(button);
-}
-
 //create filter buttons
-function filterButtons(categories) {
-
-    const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
+function filterButtons(categories, filter) {
     categories.forEach(categorie => {
         createButtonFilter(categorie, filter);
     });
@@ -84,31 +66,64 @@ function createButtonFilter(categorie, filter) {
 // Gallery filter
 function functionFilter () {
     const filterButtons = document.querySelectorAll(".filterButton");
-    const figures = document.querySelectorAll(".workCard");
-
-    function toggleActiveCategory(i) {
-        filterButtons.forEach((i) => {
-            i.classList.remove("active");
-        }),
-            i.classList.add("active");
-    }
-
-    function toggleProjects(datasetCategory) {
-        if ("Tous" === datasetCategory)
-            figures.forEach(figure => {
-                figure.style.display = "block";
-            });
-        else
-            figures.forEach(figure => {
-                figure.dataset.category === datasetCategory
-                    ? (figure.style.display = "block")
-                    : (figure.style.display = "none");
-            });
-    }
-
+    //identify wich filter button has been clicked
     for (let i = 0; i < filterButtons.length; i++)
         filterButtons[i].addEventListener("click", function () {
-            toggleActiveCategory(filterButtons[i]),
-                toggleProjects(filterButtons[i].dataset.category);
+            //then proceed to filtering
+            toggleActiveCategory(filterButtons[i], filterButtons),
+            toggleProjects(filterButtons[i].dataset.category);
         });
+}
+
+//add or remove "active to class" depending on active category
+function toggleActiveCategory(i, filterButtons) {
+    filterButtons.forEach((i) => {
+        i.classList.remove("active");
+    }),
+        i.classList.add("active");
+}
+
+//if button "tous" active, display all projects, else display only those with same datasetcategory
+function toggleProjects(datasetCategory) {
+    const figures = document.querySelectorAll(".workCard");
+    if ("Tous" === datasetCategory)
+        figures.forEach(figure => {
+            figure.style.display = "block";
+        });
+    else
+        figures.forEach(figure => {
+            figure.dataset.category === datasetCategory
+                ? (figure.style.display = "block")
+                : (figure.style.display = "none");
+        });
+}
+
+//********Display admin mode if token is found in session storage******
+function adminUserMode() {
+    if (sessionStorage.getItem("token")) {
+        //Hide filter
+        const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
+        filter.style.display = "none";
+        //change login to logout
+        const logBtn = document.getElementById("logBtn");
+        logBtn.innerText = "logout";
+        //display top menu bar
+        const body = document.querySelector("body");
+        const topMenu = document.createElement("div");
+        const publishBtn = document.createElement("button");
+        const editMode = document.createElement("p");
+
+        topMenu.className = "topMenu";
+        editMode.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>Mode édition`;
+        publishBtn.innerText = "Publier les changements";
+        
+        body.appendChild(topMenu);
+        body.insertAdjacentElement ("beforebegin", topMenu);
+        topMenu.append(editMode, publishBtn);
+        //edit buttons
+        const editBtn = `<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i>Modifier</p>`;
+        document.querySelector("#introduction img").insertAdjacentHTML("afterend", editBtn);
+        document.querySelector("#introduction article").insertAdjacentHTML("afterbegin", editBtn);
+        document.querySelector("#portfolio h2").insertAdjacentHTML("afterend", editBtn);
+    }
 }
