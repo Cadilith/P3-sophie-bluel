@@ -1,7 +1,7 @@
 const baseApiUrl = "http://localhost:5678/api/";
 
 // fetch works data from API and display it
-fetch(`${baseApiUrl}works`)
+window.onload = () => { fetch(`${baseApiUrl}works`)
 .then((response) => response.json())
 .then((worksData) => {
     //get list of categories
@@ -16,11 +16,12 @@ fetch(`${baseApiUrl}works`)
     //Filter functionnality
     categoryFilter(categories, filter);
     //administrator mode
-    adminUserMode();
+    adminUserMode(filter);
 })
-
+}
 //*******display gallery*******
 function displayGallery(data) {
+    const gallery = document.querySelector(".gallery");
     //show all works in array
     for (let i = 0; i < data.length; i++) {
         const work = data[i];
@@ -34,7 +35,7 @@ function displayGallery(data) {
         workCard.dataset.category = work.category.name;
         workCard.className = "workCard";
         //references to DOM    
-        document.querySelector(".gallery").appendChild(workCard);
+        gallery.appendChild(workCard);
         workCard.append(workImage,workTitle);
     }
 }
@@ -64,15 +65,16 @@ function createButtonFilter(categorie, filter) {
 }
 
 // Gallery filter
-function functionFilter () {
-    const filterButtons = document.querySelectorAll(".filterButton");
-    //identify wich filter button has been clicked
-    for (let i = 0; i < filterButtons.length; i++)
-        filterButtons[i].addEventListener("click", function () {
-            //then proceed to filtering
-            toggleActiveCategory(filterButtons[i], filterButtons),
-            toggleProjects(filterButtons[i].dataset.category);
-        });
+function functionFilter() {
+  const filterButtons = document.querySelectorAll(".filterButton");
+  //identify wich filter button has been clicked
+  for (let i = 0; i < filterButtons.length; i++) {
+    filterButtons[i].addEventListener("click", function () {
+      //then proceed to filtering
+      toggleActiveCategory(filterButtons[i], filterButtons),
+        toggleProjects(filterButtons[i].dataset.category);
+    });
+  }
 }
 
 //add or remove "active to class" depending on active category
@@ -86,23 +88,23 @@ function toggleActiveCategory(i, filterButtons) {
 //if button "tous" active, display all projects, else display only those with same datasetcategory
 function toggleProjects(datasetCategory) {
     const figures = document.querySelectorAll(".workCard");
-    if ("Tous" === datasetCategory)
+    if ("Tous" === datasetCategory){
         figures.forEach(figure => {
             figure.style.display = "block";
         });
-    else
+    } else {
         figures.forEach(figure => {
             figure.dataset.category === datasetCategory
                 ? (figure.style.display = "block")
                 : (figure.style.display = "none");
         });
+    }
 }
 
 //********Display admin mode if token is found in session storage******
-function adminUserMode() {
-    if (sessionStorage.getItem("token")) {
+function adminUserMode(filter) {
+    if (sessionStorage.getItem("token")) { //TODO : taille du token a verifier
         //Hide filter
-        const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
         filter.style.display = "none";
         //change login to logout
         const logBtn = document.getElementById("logBtn");
