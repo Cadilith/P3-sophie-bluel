@@ -5,18 +5,17 @@ fetch(`${baseApiUrl}works`)
 .then((response) => response.json())
 .then((worksData) => {
     //get list of categories
-    let listOfCategories = new Set();
+    let nodeListOfCategories = new Set();
     worksData.forEach(work => {
-        listOfCategories.add(work.category.name);
+        nodeListOfCategories.add(work.category.name);
     });
-    categories = Array.from(listOfCategories);
+    categories = Array.from(nodeListOfCategories);
     //display all works
     displayGallery(worksData);  
     //Filter functionnalities
     displayFilter(categories);
     adminUserMode();
 })
-
 
 //display gallery
 function displayGallery(data) {
@@ -117,7 +116,6 @@ function functionFilter () {
 //********Display admin mode if token is found in session storage******
 function adminUserMode() {
     if (sessionStorage.getItem("token")) {
-        console.log("connecté")// DELETE LATER TEST PURPOSE
         //Hide filter
         const filter = document.querySelector(".filter");//DOUBLON A VOIR ?
         filter.style.display = "none";
