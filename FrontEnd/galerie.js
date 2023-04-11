@@ -1,24 +1,26 @@
 const baseApiUrl = "http://localhost:5678/api/";
 
 // fetch works data from API and display it
-window.onload = () => { fetch(`${baseApiUrl}works`)
-.then((response) => response.json())
-.then((worksData) => {
-    //get list of categories
-    let nodeListOfCategories = new Set();
-    worksData.forEach(work => {
+window.onload = () => {
+  fetch(`${baseApiUrl}works`)
+    .then((response) => response.json())
+    .then((worksData) => {
+      //get list of categories
+      let nodeListOfCategories = new Set();
+      worksData.forEach((work) => {
         nodeListOfCategories.add(work.category.name);
+      });
+      categories = Array.from(nodeListOfCategories);
+      //display all works
+      const filter = document.querySelector(".filter");
+      displayGallery(worksData);
+      //Filter functionnality
+      categoryFilter(categories, filter);
+      //administrator mode
+      adminUserMode(filter);
     });
-    categories = Array.from(nodeListOfCategories);
-    //display all works
-    const filter = document.querySelector(".filter");
-    displayGallery(worksData);  
-    //Filter functionnality
-    categoryFilter(categories, filter);
-    //administrator mode
-    adminUserMode(filter);
-})
-}
+    //TODO : eventlistener pour ouverture de modale
+};
 //*******display gallery*******
 function displayGallery(data) {
     const gallery = document.querySelector(".gallery");
@@ -40,7 +42,7 @@ function displayGallery(data) {
     }
 }
 
-// ********** Filter***********
+// ********** Filter***********//
 
 //display filter buttons
 function categoryFilter(categories, filter) {
@@ -101,7 +103,7 @@ function toggleProjects(datasetCategory) {
     }
 }
 
-//********Display admin mode if token is found in session storage******
+//********Display admin mode if token is found in session storage******//
 function adminUserMode(filter) {
     if (sessionStorage.getItem("token")) { //TODO : taille du token a verifier
         //Hide filter
@@ -119,8 +121,7 @@ function adminUserMode(filter) {
         editMode.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>Mode édition`;
         publishBtn.innerText = "Publier les changements";
         
-        body.appendChild(topMenu);
-        body.insertAdjacentElement ("beforebegin", topMenu);
+        body.insertAdjacentElement ("afterbegin", topMenu);
         topMenu.append(editMode, publishBtn);
         //edit buttons
         const editBtn = `<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i>Modifier</p>`;
@@ -129,3 +130,38 @@ function adminUserMode(filter) {
         document.querySelector("#portfolio h2").insertAdjacentHTML("afterend", editBtn);
     }
 }
+//*********display gallery modal *******//
+function displayModal() {
+    if (sessionStorage.getItem("token")){
+        //display modal and create elements
+        const modalTitle = document.querySelector(".modalTitle");
+        const miniWork = document.createElement("figure");
+        const editCaption = document.createElement("figcaption");
+
+        miniWork.label
+        modalTitle.innerText = "Galerie photo";
+    }else{
+        alert("Veuillez vous connecter.");
+    }
+}
+
+// display mini gallery function > MAYBE REFACTOR LATER
+function displayModalGallery(data) {
+    const modalContent = document.querySelector(".modalContent");
+    //show all works in array
+    for (let i = 0; i < data.length; i++) {
+        const work = data[i];
+        //create tags
+        const miniWork = document.createElement("figure");
+        const workImage = document.createElement("img");
+        const edit = document.createElement("figcaption");
+        workImage.src = work.imageUrl;
+        workImage.alt = work.title;
+        edit.innerText = "éditer";
+        miniWork.className = "miniWork";
+        //references to DOM    
+        modalContent.appendChild(miniWork);
+        miniWork.append(workImage,edit);
+    }
+}
+
