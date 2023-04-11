@@ -304,8 +304,7 @@ footer nav ul {
 	background-color: #FFFFFF;
 	position: absolute;
 	top: 10%;
-	left: 25%;
-	bottom: 10%;
+	left: 31%;
 	overflow: auto;
 
 }
@@ -320,7 +319,7 @@ footer nav ul {
 	margin-bottom: 47px;
 }
 .modalGallery {
-	width: 50%;
+	width: 70%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	border-bottom: 1px solid #B3B3B3;
