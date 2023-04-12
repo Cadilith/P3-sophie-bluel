@@ -97,6 +97,9 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+button, input[type="submit"] {
+	cursor: pointer;
+}
 nav ul {
 	display: flex;
 	align-items: center;
@@ -271,6 +274,9 @@ footer nav ul {
 .editBtn {
 	padding: 15px 0;
 }
+.editBtn:hover {
+	cursor: pointer;
+}
 
 #introduction figure .editBtn {
 	margin-left: 4em;
@@ -286,20 +292,23 @@ footer nav ul {
 /* Modal */
 .modal {
 	display: none;
+	align-items: center;
+	justify-content: center;
 	position: fixed;
 	width: 100%;
 	height: 100%;
 	top: 0;
 	left: 0;
 	background: rgba(0, 0, 0, 0.3);
+	z-index: 1;
 }
 .modalWrapper {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	max-width: 100vw;
-	max-height: calc(100vh - 10vh);
-	width: 38%;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh - 20px);
+	width: 630px;
 	padding: 30px;
 	border-radius: 10px;
 	background-color: #FFFFFF;
@@ -335,7 +344,7 @@ footer nav ul {
 #deleteGallery {
 	color: #D65353;
 }
-.miniWork label {
+.miniWork figcaption {
 	font-size: 12px;
 }
 .miniWork {

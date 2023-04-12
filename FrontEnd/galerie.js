@@ -1,11 +1,13 @@
 const baseApiUrl = "http://localhost:5678/api/";
+let worksData;
 
 // fetch works data from API and display it
 window.onload = () => {
   fetch(`${baseApiUrl}works`)
     .then((response) => response.json())
-    .then((worksData) => {
-      //get list of categories
+    .then((data) => {
+        worksData = data;
+      //get list of categories 
       let nodeListOfCategories = new Set();
       worksData.forEach((work) => {
         nodeListOfCategories.add(work.category.name);
@@ -19,27 +21,26 @@ window.onload = () => {
       //administrator mode
       adminUserMode(filter);
     });
-    //TODO : eventlistener pour ouverture de modale
+
 };
 //*******display gallery*******
 function displayGallery(data) {
     const gallery = document.querySelector(".gallery");
     //show all works in array
-    for (let i = 0; i < data.length; i++) {
-        const work = data[i];
-        //create tags
+    data.forEach((i) => {
+                //create tags
         const workCard = document.createElement("figure");
         const workImage = document.createElement("img");
         const workTitle = document.createElement("figcaption");
-        workImage.src = work.imageUrl;
-        workImage.alt = work.title;
-        workTitle.innerText = work.title;
-        workCard.dataset.category = work.category.name;
+        workImage.src = i.imageUrl;
+        workImage.alt = i.title;
+        workTitle.innerText = i.title;
+        workCard.dataset.category = i.category.name;
         workCard.className = "workCard";
         //references to DOM    
         gallery.appendChild(workCard);
         workCard.append(workImage,workTitle);
-    }
+    })
 }
 
 // ********** Filter***********//
@@ -70,13 +71,13 @@ function createButtonFilter(categorie, filter) {
 function functionFilter() {
   const filterButtons = document.querySelectorAll(".filterButton");
   //identify wich filter button has been clicked
-  for (let i = 0; i < filterButtons.length; i++) {
-    filterButtons[i].addEventListener("click", function () {
-      //then proceed to filtering
-      toggleActiveCategory(filterButtons[i], filterButtons),
-        toggleProjects(filterButtons[i].dataset.category);
-    });
-  }
+  filterButtons.forEach((i) => {
+    i.addEventListener("click", function () {
+        //then proceed to filtering
+        toggleActiveCategory(i, filterButtons),
+          toggleProjects(i.dataset.category);
+      });
+  })
 }
 
 //add or remove "active to class" depending on active category
@@ -128,40 +129,43 @@ function adminUserMode(filter) {
         document.querySelector("#introduction img").insertAdjacentHTML("afterend", editBtn);
         document.querySelector("#introduction article").insertAdjacentHTML("afterbegin", editBtn);
         document.querySelector("#portfolio h2").insertAdjacentHTML("afterend", editBtn);
+        //event listener modal
+        document.querySelector("#portfolio p").addEventListener("click", openModal);
     }
 }
 //*********display gallery modal *******//
-function displayModal() {
+const openModal = function () {
     if (sessionStorage.getItem("token")){
-        //display modal and create elements
-        const modalTitle = document.querySelector(".modalTitle");
-        const miniWork = document.createElement("figure");
-        const editCaption = document.createElement("figcaption");
-
-        miniWork.label
-        modalTitle.innerText = "Galerie photo";
+        const modal = document.querySelector(".modal");
+        modal.style.display = "flex";
+        modalGallery(worksData);
+        modal.addEventListener("click", closeModal);
     }else{
         alert("Veuillez vous connecter.");
     }
 }
 
-// display mini gallery function > MAYBE REFACTOR LATER
-function displayModalGallery(data) {
+// display mini gallery function
+function modalGallery(data) {
     const modalContent = document.querySelector(".modalContent");
+    modalContent.innerHTML = "";
     //show all works in array
-    for (let i = 0; i < data.length; i++) {
-        const work = data[i];
+    data.forEach((i) => {
         //create tags
         const miniWork = document.createElement("figure");
         const workImage = document.createElement("img");
         const edit = document.createElement("figcaption");
-        workImage.src = work.imageUrl;
-        workImage.alt = work.title;
+        workImage.src = i.imageUrl;
+        workImage.alt = i.title;
         edit.innerText = "éditer";
         miniWork.className = "miniWork";
         //references to DOM    
         modalContent.appendChild(miniWork);
         miniWork.append(workImage,edit);
-    }
+    })
 }
 
+//close modal function
+function closeModal() {
+    document.querySelector(".modal").style.display = "none";
+}
