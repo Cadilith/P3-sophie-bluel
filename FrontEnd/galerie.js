@@ -155,13 +155,16 @@ function modalGallery(data) {
         const miniWork = document.createElement("figure");
         const workImage = document.createElement("img");
         const edit = document.createElement("figcaption");
+        const trashCan = document.createElement("i");
+        trashCan.id = i.id;
+        trashCan.classList.add("fa-solid", "fa-trash-can");
         workImage.src = i.imageUrl;
         workImage.alt = i.title;
         edit.innerText = "éditer";
         miniWork.className = "miniWork";
         //references to DOM    
         modalContent.appendChild(miniWork);
-        miniWork.append(workImage,edit);
+        miniWork.append(workImage,edit, trashCan);
     })
 }
 
@@ -169,3 +172,30 @@ function modalGallery(data) {
 function closeModal() {
     document.querySelector(".modal").style.display = "none";
 }
+
+//delete work function
+function deleteWork (id) {
+    let token = sessionStorage.getItem("token");
+    fetch(baseApiUrl+"works/"+id, {
+        method: "DELETE",
+        headers: {
+            "authorization": `Bearer ${token}`,
+        },
+    })
+    .then((response) => {
+        if (response.status === 204) {
+            console.log(worksData);
+        } else {
+            console.log("erreur");
+        }
+    })
+}
+
+// EVENT LISTENER DELETE
+document.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (e.target.matches(".fa-trash-can")) {
+        deleteWork(e.target.id);
+        console.log("Delete id:" + e.target.id);
+    };
+})
