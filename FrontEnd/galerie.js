@@ -106,7 +106,7 @@ function toggleProjects(datasetCategory) {
 
 //********Display admin mode if token is found in session storage******//
 function adminUserMode(filter) {
-    if (sessionStorage.getItem("token")) { //TODO : taille du token a verifier
+    if (sessionStorage.getItem("token").length == 143) { //controls token lenght for additional security
         //Hide filter
         filter.style.display = "none";
         //change login to logout
@@ -135,7 +135,7 @@ function adminUserMode(filter) {
 }
 //*********display gallery modal *******//
 const openModal = function () {
-    if (sessionStorage.getItem("token")){
+    if (sessionStorage.getItem("token").length == 143){ //controls token lenght fo additional security
         const modal = document.querySelector(".modal");
         modal.style.display = "flex";
         modalGallery(worksData);
