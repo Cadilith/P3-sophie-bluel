@@ -303,6 +303,7 @@ footer nav ul {
 	top: 10%;
 	left: 31%;
 	overflow: auto;
+	z-index: 2;
 
 }
 .modal i {
