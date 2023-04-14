@@ -13,14 +13,33 @@
 	<script src="https://kit.fontawesome.com/5fcbfd7080.js" crossorigin="anonymous"></script>
 </head>
 <body>
-	<aside id="editGallery" class="modal" role="dialog" aria-labelledby="modalTitle">
-        <div class="modalWrapper">
-            <i class="fa-solid fa-xmark"></i>
+	<aside class="modal" role="dialog" aria-labelledby="modalTitle">
+        <div class="modalWrapper" id="editGallery">
+            <div class="modalHeader"><i class="fa-solid fa-xmark"></i></div>
             <h3 class="modalTitle">Galerie photo</h3>
             <div class="modalContent">                
             </div>
             <input type="submit" id="addPicture" value="Ajouter une photo">
             <a href="#" id="deleteGallery">Supprimer la galerie</a>
+        </div>
+		<div class="modalWrapper" id="addPicture">
+            <div class="modalHeader"><i class="fa-solid fa-arrow-left"></i><i class="fa-solid fa-xmark"></i></div>
+            <h3 class="modalTitle">Ajouter photo</h3>
+            <div class="modalContent">    
+                <form id="addPictureForm"> 
+                    <label for="photo" id="labelPhoto">
+                        <i class="fa-regular fa-image"></i>
+                        <button id="browsePictures">+ Ajouter photo</button>
+                        <p>jpg, png : 4mo max</p>
+                    </label>
+                    <input type="file" class ="photo" name="photo" id="photo">
+                    <label for="title">Titre</label>
+                    <input type="text" id="title" name="title">
+                    <label for="selectCategory">Catégorie</label>
+                    <select id="selectCategory" name="selectCategory"></select>         
+                </form>  
+            </div>
+            <input type="submit" id="valider" value="valider">
         </div>
     </aside>  
 	<header>

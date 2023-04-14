@@ -1,5 +1,7 @@
 const baseApiUrl = "http://localhost:5678/api/";
 let worksData;
+let categories;
+let modalStep = 0;
 
 // FETCH works data from API and display it
 window.onload = () => {
@@ -110,7 +112,7 @@ function toggleProjects(datasetCategory) {
 
 function adminUserMode() {
   //display admin mode if token is found and has the expected length
-  if (sessionStorage.getItem("token").length == 143) {
+  if (sessionStorage.getItem("token")?.length == 143) {//optional chaining
     //Hide filter
     document.querySelector(".filter").style.display = "none";
     //change login to logout
@@ -147,14 +149,17 @@ function adminUserMode() {
 
 //open modal if token is found and has the expected length
 const openModal = function () {
-  if (sessionStorage.getItem("token").length == 143) {
+  if (sessionStorage.getItem("token")?.length == 143) {
     const modal = document.querySelector(".modal");
     modal.style.display = "flex";
+    document.querySelector("#addPicture").style.display = "none";
     modalGallery(worksData);
+    modalStep = 1;
     // close modal listener
     modal.addEventListener("click", closeModal);
     // DELETE button listener
     document.addEventListener("click", deleteBtn);
+    document.addEventListener("click", openNewWorkForm);
   }
 };
 
@@ -182,13 +187,14 @@ function modalGallery(data) {
 }
 
 //close modal
-function closeModal(e) {
+const closeModal = function (e) {
   if (
     e.target === document.querySelector(".modal") ||
     e.target === document.querySelector(".fa-xmark")
   ) {
     document.querySelector(".modal").style.display = "none";
     document.querySelector(".modal").removeEventListener("click", closeModal);
+    modalStep = 0;
   }
 }
 
@@ -226,3 +232,19 @@ function deleteWork(i) {
     }
   });
 }
+
+//*************ADD WORK***************/
+
+//display add work form
+const openNewWorkForm = function (e) {
+  e.preventDefault();
+  if(e.target === document.querySelector("#addPicture")){
+    modalStep = 2;
+    document.querySelector("#addPicture").style.display = "flex";
+    document.querySelector("#editGallery").style.display = "none";
+    document.removeEventListener("click", openNewWorkForm);
+    document.querySelector(".modal").addEventListener("click", closeModal);
+  }
+}
+
+//POST work event listener

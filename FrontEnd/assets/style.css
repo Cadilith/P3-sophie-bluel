@@ -145,7 +145,7 @@ li:hover {
 	justify-content: center;
 	gap: 10px;
 }
-.filterButton, .filterButtonAll {
+.filterButton, .filterButtonAll, #browsePictures {
 	padding: 10px 20px;
 	border-radius: 60px;
 	border: #1D6154 1px solid;
@@ -189,7 +189,7 @@ li:hover {
 	display: flex;
 	flex-direction: column;
 }
-#contact input, #login input, .modal input {
+#contact input, #login input, .modal input, #selectCategory {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -306,9 +306,16 @@ footer nav ul {
 	z-index: 2;
 
 }
+.modalHeader {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+#editGallery .modalHeader {
+	justify-content: flex-end;
+}
 .modal i {
 	display: block;
-	align-self: flex-end;
 	font-size: 1.5em;
 	border-bottom: 10px;
 }
@@ -318,12 +325,14 @@ footer nav ul {
 }
 .modalContent {
 	width: 70%;
+	border-bottom: 1px solid #B3B3B3;
+	padding-bottom: 47px;
+}
+#editGallery .modalContent {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	border-bottom: 1px solid #B3B3B3;
 	grid-column-gap: 8px;
 	grid-row-gap: 10px;
-	padding-bottom: 47px;
 }
 .modal input {
 	width: auto;
@@ -349,4 +358,57 @@ footer nav ul {
 	position: absolute;
 	top: 0.4em;
 	right: 0.4em;	
+}
+
+/* TEMPORAIRE MODAL 2 */
+#addPicture .modalHeader {
+	justify-content: space-between; 
+}
+#valider {
+	background-color: #A7A7A7;
+	width: 37%;
+}
+#addPictureForm {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	gap: 10px;
+}
+#photo {
+	display: none;
+}
+#labelPhoto {
+	height: 169px;
+	background-color: #E8F1F6;
+	border-radius: 3px;
+	box-shadow: none;
+	margin-bottom: 30px;
+	text-align: center;
+	width: 100%;
+	padding-top: 25px;
+}
+#labelPhoto p {
+	font-size: 10px;
+	font-weight: 400;
+}
+#labelPhoto i {
+	color: #B9C5CC;
+	font-size: 5em;
+	margin-bottom: 27px;
+}
+#addPictureForm label, #labelPhoto button  {
+	font-family: 'Work Sans';
+	font-size: 1em;
+	font-weight: 600;
+	color: #3D3D3D;
+}
+#labelPhoto button {
+	color: #306685;
+	background-color: #CBD6DC;
+	border: none;
+	padding: 10px 33px;
+	margin-bottom: 10px;
+}
+#title {
+	margin-bottom: 11px;
 }
