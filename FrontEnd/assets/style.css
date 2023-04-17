@@ -96,6 +96,11 @@ h2{
 button, input[type="submit"] {
 	cursor: pointer;
 }
+input[type="text"], option, textarea, input[type="email"], #selectCategory {
+	font-family: 'Work Sans';
+	font-size:1em;
+	color: #444444 ;                  
+}
 nav ul {
 	display: flex;
 	align-items: center;
@@ -191,7 +196,6 @@ li:hover {
 }
 #contact input, #login input, .modal input, #selectCategory {
 	height: 50px;
-	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	padding: 10px;
@@ -224,6 +228,7 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+	font-size: 1.2em;
 }
 
 footer nav ul {
@@ -334,7 +339,7 @@ footer nav ul {
 	grid-column-gap: 8px;
 	grid-row-gap: 10px;
 }
-.modal input {
+#addPictureBtn {
 	width: auto;
 	padding: 10px 49px;
 }
@@ -361,6 +366,9 @@ footer nav ul {
 }
 
 /* TEMPORAIRE MODAL 2 */
+#addPicture {
+	display: none;
+}
 #addPicture .modalHeader {
 	justify-content: space-between; 
 }
@@ -412,3 +420,13 @@ footer nav ul {
 #title {
 	margin-bottom: 11px;
 }
+#selectCategory {
+	appearance: none;
+	background-image: url(./icons/chevron-down.png);
+	background-repeat: no;
+	background-origin: content-box;
+	padding-right: 20px;
+}
+
+
+

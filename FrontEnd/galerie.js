@@ -131,15 +131,9 @@ function adminUserMode() {
     topMenu.append(editMode, publishBtn);
     //edit buttons
     const editBtn = `<p class="editBtn"><i class="fa-regular fa-pen-to-square"></i>Modifier</p>`;
-    document
-      .querySelector("#introduction img")
-      .insertAdjacentHTML("afterend", editBtn);
-    document
-      .querySelector("#introduction article")
-      .insertAdjacentHTML("afterbegin", editBtn);
-    document
-      .querySelector("#portfolio h2")
-      .insertAdjacentHTML("afterend", editBtn);
+    document.querySelector("#introduction img").insertAdjacentHTML("afterend", editBtn);
+    document.querySelector("#introduction article").insertAdjacentHTML("afterbegin", editBtn);
+    document.querySelector("#portfolio h2").insertAdjacentHTML("afterend", editBtn);
     //event listener modal
     document.querySelector("#portfolio p").addEventListener("click", openModal);
   }
@@ -153,8 +147,9 @@ const openModal = function () {
     const modal = document.querySelector(".modal");
     modal.style.display = "flex";
     document.querySelector("#addPicture").style.display = "none";
+    document.querySelector("#editGallery").style.display = "flex";
     modalGallery(worksData);
-    modalStep = 1;
+    modalStep = 0;
     // close modal listener
     modal.addEventListener("click", closeModal);
     // DELETE button listener
@@ -190,11 +185,11 @@ function modalGallery(data) {
 const closeModal = function (e) {
   if (
     e.target === document.querySelector(".modal") ||
-    e.target === document.querySelector(".fa-xmark")
+    e.target === document.getElementsByClassName("fa-xmark")[modalStep]
   ) {
     document.querySelector(".modal").style.display = "none";
     document.querySelector(".modal").removeEventListener("click", closeModal);
-    modalStep = 0;
+    modalStep = null;
   }
 }
 
@@ -238,13 +233,33 @@ function deleteWork(i) {
 //display add work form
 const openNewWorkForm = function (e) {
   e.preventDefault();
-  if(e.target === document.querySelector("#addPicture")){
-    modalStep = 2;
+  if(e.target === document.querySelector("#addPictureBtn")){
+    modalStep = 1;
     document.querySelector("#addPicture").style.display = "flex";
     document.querySelector("#editGallery").style.display = "none";
+    //select categories list 
+    selectCategoryForm();
+    //events
+    document.addEventListener("click", closeModal);
+    document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
     document.removeEventListener("click", openNewWorkForm);
-    document.querySelector(".modal").addEventListener("click", closeModal);
   }
 }
+
+//category options for form
+const selectCategoryForm = function () {
+  //reset categories
+  document.querySelector("#selectCategory").innerHTML = "";
+  //empty first option
+  option = document.createElement("option");
+  document.querySelector("#selectCategory").appendChild(option);
+  //options from categories array
+  categories.forEach((categorie) => {
+    option = document.createElement("option");
+    option.value = categorie;
+    option.innerText = categorie;
+    document.querySelector("#selectCategory").appendChild(option);
+  });
+};
 
 //POST work event listener
