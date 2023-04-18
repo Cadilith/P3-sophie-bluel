@@ -1,7 +1,7 @@
 const baseApiUrl = "http://localhost:5678/api/";
 let worksData;
 let categories;
-let modalStep = 0;
+let modalStep = null;
 
 // FETCH works data from API and display it
 window.onload = () => {
@@ -229,6 +229,7 @@ function deleteWork(i) {
   }).then((response) => {
     //if response is positive, update the works gallery accordingly
     if (response.status === 204 || response.status === 200) {
+      alert("Projet supprimé avec succés")
       //delete work from worksData array
       worksData = worksData.filter((work) => work.id != i);
       //display updated galleries
@@ -246,10 +247,13 @@ function deleteWork(i) {
 //display add work form
 const openNewWorkForm = function (e) {
   if(e.target === document.querySelector("#addPictureBtn")){
+    modalStep = 1;
     document.querySelector("#addPicture").style.display = "flex";
     document.querySelector("#editGallery").style.display = "none";
     document.querySelector("#labelPhoto").style.display = "flex";
     document.querySelector("#picturePreview").style.display = "none";
+    document.getElementById("addPictureForm").reset();
+    document.querySelector("#valider").style.backgroundColor = "#A7A7A7";
     //select categories list 
     selectCategoryForm();
     //display preview
@@ -263,6 +267,7 @@ const openNewWorkForm = function (e) {
       }
     };
     //events
+    document.querySelector("#addPictureForm").onchange = changeSubmitBtnColor;
     document.addEventListener("click", closeModal);
     document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
     document.removeEventListener("click", openNewWorkForm);
@@ -305,7 +310,7 @@ function postNewWork() {
   const title = document.getElementById("title").value;
   const categoryId = select.options[select.selectedIndex].id;
   const image = document.getElementById("photo").files[0];
-  console.log(title, categoryId, image)
+  formValidation(image, title, categoryId);
   //create FormData
   const formData = new FormData();
   formData.append("image", image);
@@ -322,11 +327,40 @@ function postNewWork() {
   })
       .then(response => {
           if (response.ok) {
-              alert("Nouveau fichier envoyé avec succés: "+title);
+            alert("Nouveau fichier envoyé avec succés : " + title);
+            document.querySelector(".modal").style.display = "none";
+            document.removeEventListener("click", closeModal);
+            document.removeEventListener("click", deleteBtn);
+            modalStep = null;
           } else {
-              console.error("Erreur:", response.status);
+            console.error("Erreur:", response.status);
           }
       })
-      .catch(error => console.error("Erreur:", response.status, error));
+      .catch(error => console.error("Erreur:", error));
 };
+
+//change submit button color if all fields are filled
+const changeSubmitBtnColor = function() {
+  const select = document.getElementById("selectCategory");
+  if (document.getElementById("title").value !== "" && document.getElementById("photo").files[0] !== "" && select.options[select.selectedIndex].id !== "") {
+    document.querySelector("#valider").style.backgroundColor = "#1D6154";
+  }
+}
+
+//form validation
+const formValidation = function(image, title, categoryId) {
+  if (image == ""){
+    alert("Veuillez ajouter une image");
+    return false;
+  }
+  if (title == ""){
+    alert("Veuillez ajouter un titre");
+    return false;
+  }
+  if (categoryId == ""){
+    alert("Veuillez choisir une catégorie");
+    return false;
+  }
+  return true;
+}
 
