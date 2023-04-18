@@ -10,11 +10,7 @@ window.onload = () => {
     .then((data) => {
       worksData = data;
       //get list of categories
-      let nodeListOfCategories = new Set();
-      worksData.forEach((work) => {
-        nodeListOfCategories.add(work.category.name);
-      });
-      categories = Array.from(nodeListOfCategories);
+      listOfUniqueCategories();
       //display all works
       const filter = document.querySelector(".filter");
       displayGallery(worksData);
@@ -24,6 +20,7 @@ window.onload = () => {
       adminUserMode(filter);
     });
 };
+
 
 //*******GALLERY*******
 
@@ -49,9 +46,24 @@ function displayGallery(data) {
 
 // ********** FILTER ***********//
 
+//get list of categories in array as unique objects
+function listOfUniqueCategories() {
+  let nodeListOfCategories = new Set();
+  worksData.forEach((work) => {
+    nodeListOfCategories.add(JSON.stringify(work.category));
+  });
+  const strings = [...nodeListOfCategories];
+  categories = strings.map((s) => JSON.parse(s));
+}
+
+
 //init filter buttons
 function categoryFilter(categories, filter) {
-  createButtonFilter("Tous", filter);
+  const button = document.createElement("button");
+  button.innerText = "Tous";
+  button.className = "filterButton";
+  button.dataset.category = "Tous";
+  filter.appendChild(button);
   filterButtons(categories, filter);
   functionFilter();
 }
@@ -65,9 +77,9 @@ function filterButtons(categories, filter) {
 
 function createButtonFilter(categorie, filter) {
   const button = document.createElement("button");
-  button.innerText = categorie;
+  button.innerText = categorie.name;
   button.className = "filterButton";
-  button.dataset.category = categorie;
+  button.dataset.category = categorie.name;
   filter.appendChild(button);
 }
 
@@ -188,7 +200,8 @@ const closeModal = function (e) {
     e.target === document.getElementsByClassName("fa-xmark")[modalStep]
   ) {
     document.querySelector(".modal").style.display = "none";
-    document.querySelector(".modal").removeEventListener("click", closeModal);
+    document.removeEventListener("click", closeModal);
+    document.removeEventListener("click", deleteBtn);
     modalStep = null;
   }
 }
@@ -232,17 +245,29 @@ function deleteWork(i) {
 
 //display add work form
 const openNewWorkForm = function (e) {
-  e.preventDefault();
   if(e.target === document.querySelector("#addPictureBtn")){
-    modalStep = 1;
     document.querySelector("#addPicture").style.display = "flex";
     document.querySelector("#editGallery").style.display = "none";
+    document.querySelector("#labelPhoto").style.display = "flex";
+    document.querySelector("#picturePreview").style.display = "none";
     //select categories list 
     selectCategoryForm();
+    //display preview
+    let pictureInput = document.querySelector("#photo");
+    pictureInput.onchange = e => {
+      const [file] = pictureInput.files;
+      if (file) {
+        document.querySelector("#picturePreviewImg").src = URL.createObjectURL(file);
+        document.querySelector("#picturePreview").style.display = "flex";
+        document.querySelector("#labelPhoto").style.display = "none";
+      }
+    };
     //events
     document.addEventListener("click", closeModal);
     document.querySelector(".modalHeader .fa-arrow-left").addEventListener("click", openModal);
     document.removeEventListener("click", openNewWorkForm);
+    document.removeEventListener("click", deleteBtn);
+    document.addEventListener("click", newWorkFormSubmit);
   }
 }
 
@@ -256,10 +281,52 @@ const selectCategoryForm = function () {
   //options from categories array
   categories.forEach((categorie) => {
     option = document.createElement("option");
-    option.value = categorie;
-    option.innerText = categorie;
+    option.value = categorie.name;
+    option.innerText = categorie.name;
+    option.id = categorie.id;
     document.querySelector("#selectCategory").appendChild(option);
   });
 };
 
-//POST work event listener
+
+//submit work form event listener
+const newWorkFormSubmit = function (e) {
+  if (e.target === document.querySelector("#valider")) {
+    e.preventDefault();
+    postNewWork();
+  }
+}
+
+//POST new work
+function postNewWork() {
+  let token = sessionStorage.getItem("token");
+  const select = document.getElementById("selectCategory");
+  //get data from form
+  const title = document.getElementById("title").value;
+  const categoryId = select.options[select.selectedIndex].id;
+  const image = document.getElementById("photo").files[0];
+  console.log(title, categoryId, image)
+  //create FormData
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("title", title);
+  formData.append("category", categoryId);
+  
+// send collected data to API
+  fetch(`${baseApiUrl}works`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+      body: formData
+  })
+      .then(response => {
+          if (response.ok) {
+              alert("Nouveau fichier envoyé avec succés: "+title);
+          } else {
+              console.error("Erreur:", response.status);
+          }
+      })
+      .catch(error => console.error("Erreur:", response.status, error));
+};
+

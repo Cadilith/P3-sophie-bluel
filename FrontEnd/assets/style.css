@@ -382,40 +382,52 @@ footer nav ul {
 	width: 100%;
 	gap: 10px;
 }
-#photo {
-	display: none;
-}
 #labelPhoto {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	height: 169px;
 	background-color: #E8F1F6;
 	border-radius: 3px;
-	box-shadow: none;
 	margin-bottom: 30px;
 	text-align: center;
 	width: 100%;
 	padding-top: 25px;
+	position: relative;
 }
 #labelPhoto p {
 	font-size: 10px;
 	font-weight: 400;
 }
-#labelPhoto i {
-	color: #B9C5CC;
-	font-size: 5em;
+#picture {
 	margin-bottom: 27px;
+	width: 5.1em;
 }
-#addPictureForm label, #labelPhoto button  {
+#picturePreview {
+	display: flex;
+	background-color: #E8F1F6;
+	height: 169px;
+	width: 100%;
+	justify-content: center;
+}
+#picturePreview img {
+	height: 100%;
+}
+#browsePictures  {
 	font-family: 'Work Sans';
 	font-size: 1em;
 	font-weight: 600;
 	color: #3D3D3D;
+	width: fit-content;
 }
-#labelPhoto button {
+#browsePictures {
 	color: #306685;
 	background-color: #CBD6DC;
 	border: none;
 	padding: 10px 33px;
 	margin-bottom: 10px;
+	display: inline-block;
+	cursor: pointer;
 }
 #title {
 	margin-bottom: 11px;
@@ -423,9 +435,18 @@ footer nav ul {
 #selectCategory {
 	appearance: none;
 	background-image: url(./icons/chevron-down.png);
-	background-repeat: no;
+	background-repeat: no-repeat;
+	background-position: center right;
 	background-origin: content-box;
 	padding-right: 20px;
+}
+#photo {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
 }
 
 
