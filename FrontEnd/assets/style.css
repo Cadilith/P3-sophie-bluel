@@ -299,14 +299,12 @@ footer nav ul {
 	flex-direction: column;
 	align-items: center;
 	max-width: calc(100vw - 20px);
-	max-height: calc(100vh - 20px);
+	max-height: calc(100vh - 50px);
 	width: 630px;
 	padding: 30px;
 	border-radius: 10px;
 	background-color: #FFFFFF;
-	position: absolute;
-	top: 10%;
-	left: 31%;
+	margin: auto;
 	overflow: auto;
 	z-index: 2;
 
