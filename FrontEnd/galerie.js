@@ -308,8 +308,10 @@ function postNewWork() {
   const select = document.getElementById("selectCategory");
   //get data from form
   const title = document.getElementById("title").value;
+  const categoryName = select.options[select.selectedIndex].innerText;
   const categoryId = select.options[select.selectedIndex].id;
   const image = document.getElementById("photo").files[0];
+  //check form validity
   formValidation(image, title, categoryId);
   //create FormData
   const formData = new FormData();
@@ -328,6 +330,8 @@ function postNewWork() {
       .then(response => {
           if (response.ok) {
             alert("Nouveau fichier envoyé avec succés : " + title);
+            addToWorksData(image, title, categoryName);
+            displayGallery(worksData);
             document.querySelector(".modal").style.display = "none";
             document.removeEventListener("click", closeModal);
             document.removeEventListener("click", deleteBtn);
@@ -362,5 +366,15 @@ const formValidation = function(image, title, categoryId) {
     return false;
   }
   return true;
+}
+
+//add new work in worksData array for dynamic display
+const addToWorksData = function(image, title, categoryName, categoryId) {
+  newWork = {};
+  newWork.title = title;
+  newWork.category = {"id" : categoryId, "name" : categoryName};
+  newWork.imageUrl = URL.createObjectURL(image);
+  console.log(newWork);
+  worksData.push(newWork);
 }
 
