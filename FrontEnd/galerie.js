@@ -1,7 +1,14 @@
+//Data 
 const baseApiUrl = "http://localhost:5678/api/";
 let worksData;
 let categories;
+
+//Elements
+let filter;
+let gallery;
+let modal;
 let modalStep = null;
+let pictureInput;
 
 // FETCH works data from API and display it
 window.onload = () => {
@@ -12,7 +19,7 @@ window.onload = () => {
       //get list of categories
       listOfUniqueCategories();
       //display all works
-      const filter = document.querySelector(".filter");
+      filter = document.querySelector(".filter");
       displayGallery(worksData);
       //Filter functionnality
       categoryFilter(categories, filter);
@@ -25,7 +32,7 @@ window.onload = () => {
 //*******GALLERY*******
 
 function displayGallery(data) {
-  const gallery = document.querySelector(".gallery");
+  gallery = document.querySelector(".gallery");
   gallery.innerHTML = "";
   //show all works in array
   data.forEach((i) => {
@@ -48,11 +55,12 @@ function displayGallery(data) {
 
 //get list of categories in array as unique objects
 function listOfUniqueCategories() {
-  let nodeListOfCategories = new Set();
+  let listOfCategories = new Set();
   worksData.forEach((work) => {
-    nodeListOfCategories.add(JSON.stringify(work.category));
+    listOfCategories.add(JSON.stringify(work.category));
   });
-  const strings = [...nodeListOfCategories];
+  //delete non unique objects
+  const strings = [...listOfCategories];
   categories = strings.map((s) => JSON.parse(s));
 }
 
@@ -89,22 +97,12 @@ function functionFilter() {
   //identify wich filter button has been clicked
   filterButtons.forEach((i) => {
     i.addEventListener("click", function () {
-      //then proceed to filtering
-      toggleActiveCategory(i, filterButtons);
       toggleProjects(i.dataset.category);
     });
   });
 }
 
-//add or remove "active to button's class" depending on active category
-function toggleActiveCategory(i, filterButtons) {
-  filterButtons.forEach((i) => {
-    i.classList.remove("active");
-  }),
-    i.classList.add("active");
-}
-
-//if button "tous" active, display all projects, else display only those with same datasetcategory
+//if button "tous" active, display all projects, else display only those with same dataset category
 function toggleProjects(datasetCategory) {
   const figures = document.querySelectorAll(".workCard");
   if ("Tous" === datasetCategory) {
@@ -123,8 +121,8 @@ function toggleProjects(datasetCategory) {
 //********ADMIN MODE******//
 
 function adminUserMode() {
-  //display admin mode if token is found and has the expected length
-  if (sessionStorage.getItem("token")?.length == 143) {//optional chaining
+  //display admin mode if token is found and has the expected length (optional chaining)
+  if (sessionStorage.getItem("token")?.length == 143) {
     //Hide filter
     document.querySelector(".filter").style.display = "none";
     //change login to logout
@@ -156,7 +154,7 @@ function adminUserMode() {
 //open modal if token is found and has the expected length
 const openModal = function () {
   if (sessionStorage.getItem("token")?.length == 143) {
-    const modal = document.querySelector(".modal");
+    modal = document.querySelector(".modal");
     modal.style.display = "flex";
     document.querySelector("#addPicture").style.display = "none";
     document.querySelector("#editGallery").style.display = "flex";
@@ -169,29 +167,6 @@ const openModal = function () {
     document.addEventListener("click", openNewWorkForm);
   }
 };
-
-//display modal gallery function
-function modalGallery(data) {
-  const modalContent = document.querySelector(".modalContent");
-  modalContent.innerHTML = "";
-  //show all works in array
-  data.forEach((i) => {
-    //create elements
-    const miniWork = document.createElement("figure");
-    const workImage = document.createElement("img");
-    const edit = document.createElement("figcaption");
-    const trashCan = document.createElement("i");
-    trashCan.id = i.id;
-    trashCan.classList.add("fa-solid", "fa-trash-can");
-    workImage.src = i.imageUrl;
-    workImage.alt = i.title;
-    edit.innerText = "éditer";
-    miniWork.className = "miniWork";
-    //references to DOM
-    modalContent.appendChild(miniWork);
-    miniWork.append(workImage, edit, trashCan);
-  });
-}
 
 //close modal
 const closeModal = function (e) {
@@ -207,6 +182,30 @@ const closeModal = function (e) {
 }
 
 //*************DELETE***************/
+
+//display modal gallery function
+function modalGallery(data) {
+  const modalContent = document.querySelector(".modalContent");
+  modalContent.innerHTML = "";
+  //show all works in array
+  data.forEach((i) => {
+    //create elements
+    const miniWork = document.createElement("figure");
+    const workImage = document.createElement("img");
+    const edit = document.createElement("figcaption");
+    const trashCan = document.createElement("i");
+    //trashcan ID is work ID
+    trashCan.id = i.id;
+    trashCan.classList.add("fa-solid", "fa-trash-can");
+    workImage.src = i.imageUrl;
+    workImage.alt = i.title;
+    edit.innerText = "éditer";
+    miniWork.className = "miniWork";
+    //references to DOM
+    modalContent.appendChild(miniWork);
+    miniWork.append(workImage, edit, trashCan);
+  });
+}
 
 //DELETE work event listener handler
 const deleteBtn = function (e) {
@@ -228,7 +227,7 @@ function deleteWork(i) {
     },
   }).then((response) => {
     //if response is positive, update the works gallery accordingly
-    if (response.status === 204 || response.status === 200) {
+    if (response.ok) {
       alert("Projet supprimé avec succés")
       //delete work from worksData array
       worksData = worksData.filter((work) => work.id != i);
@@ -237,7 +236,8 @@ function deleteWork(i) {
       modalGallery(worksData);
       //if response is negative report an error
     } else {
-      alert("erreur");
+      alert("Erreur : " + response.status);
+      closeModal;
     }
   });
 }
@@ -252,20 +252,13 @@ const openNewWorkForm = function (e) {
     document.querySelector("#editGallery").style.display = "none";
     document.querySelector("#labelPhoto").style.display = "flex";
     document.querySelector("#picturePreview").style.display = "none";
-    document.getElementById("addPictureForm").reset();
     document.querySelector("#valider").style.backgroundColor = "#A7A7A7";
-    //select categories list 
+    document.getElementById("addPictureForm").reset();
+    //<select> categories list 
     selectCategoryForm();
     //display preview
-    let pictureInput = document.querySelector("#photo");
-    pictureInput.onchange = e => {
-      const [file] = pictureInput.files;
-      if (file) {
-        document.querySelector("#picturePreviewImg").src = URL.createObjectURL(file);
-        document.querySelector("#picturePreview").style.display = "flex";
-        document.querySelector("#labelPhoto").style.display = "none";
-      }
-    };
+    pictureInput = document.querySelector("#photo");
+    pictureInput.onchange = picturePreview;
     //events
     document.querySelector("#addPictureForm").onchange = changeSubmitBtnColor;
     document.addEventListener("click", closeModal);
@@ -273,6 +266,16 @@ const openNewWorkForm = function (e) {
     document.removeEventListener("click", openNewWorkForm);
     document.removeEventListener("click", deleteBtn);
     document.addEventListener("click", newWorkFormSubmit);
+  }
+}
+
+//preview picture in form
+const picturePreview = function() {
+  const [file] = pictureInput.files;
+  if (file) {
+    document.querySelector("#picturePreviewImg").src = URL.createObjectURL(file);
+    document.querySelector("#picturePreview").style.display = "flex";
+    document.querySelector("#labelPhoto").style.display = "none";
   }
 }
 
@@ -292,7 +295,6 @@ const selectCategoryForm = function () {
     document.querySelector("#selectCategory").appendChild(option);
   });
 };
-
 
 //submit work form event listener
 const newWorkFormSubmit = function (e) {
@@ -334,7 +336,6 @@ function postNewWork() {
             displayGallery(worksData);
             document.querySelector(".modal").style.display = "none";
             document.removeEventListener("click", closeModal);
-            document.removeEventListener("click", deleteBtn);
             modalStep = null;
           } else {
             console.error("Erreur:", response.status);
@@ -374,7 +375,6 @@ const addToWorksData = function(image, title, categoryName, categoryId) {
   newWork.title = title;
   newWork.category = {"id" : categoryId, "name" : categoryName};
   newWork.imageUrl = URL.createObjectURL(image);
-  console.log(newWork);
   worksData.push(newWork);
 }
 
