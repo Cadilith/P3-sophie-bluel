@@ -314,34 +314,16 @@ function postNewWork() {
   const categoryId = select.options[select.selectedIndex].id;
   const image = document.getElementById("photo").files[0];
   //check form validity
-  formValidation(image, title, categoryId);
-  //create FormData
-  const formData = new FormData();
-  formData.append("image", image);
-  formData.append("title", title);
-  formData.append("category", categoryId);
-  
-// send collected data to API
-  fetch(`${baseApiUrl}works`, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-      body: formData
-  })
-      .then(response => {
-          if (response.ok) {
-            alert("Nouveau fichier envoyé avec succés : " + title);
-            addToWorksData(image, title, categoryName);
-            displayGallery(worksData);
-            document.querySelector(".modal").style.display = "none";
-            document.removeEventListener("click", closeModal);
-            modalStep = null;
-          } else {
-            console.error("Erreur:", response.status);
-          }
-      })
-      .catch(error => console.error("Erreur:", error));
+  let validity = formValidation(image, title, categoryId);
+  if (validity === true) {
+    //create FormData
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("category", categoryId);
+    // send collected data to API
+    sendNewData(token, formData, title, categoryName);
+  }
 };
 
 //change submit button color if all fields are filled
@@ -354,7 +336,7 @@ const changeSubmitBtnColor = function() {
 
 //form validation
 const formValidation = function(image, title, categoryId) {
-  if (image == ""){
+  if (image == undefined){
     alert("Veuillez ajouter une image");
     return false;
   }
@@ -365,16 +347,44 @@ const formValidation = function(image, title, categoryId) {
   if (categoryId == ""){
     alert("Veuillez choisir une catégorie");
     return false;
-  }
+  }else{
   return true;
+  }
 }
 
-//add new work in worksData array for dynamic display
-const addToWorksData = function(image, title, categoryName, categoryId) {
+//add new work in worksData array for dynamic display using API response
+const addToWorksData = function(data, categoryName) {
   newWork = {};
-  newWork.title = title;
-  newWork.category = {"id" : categoryId, "name" : categoryName};
-  newWork.imageUrl = URL.createObjectURL(image);
+  newWork.title = data.title;
+  newWork.id = data.id;
+  newWork.category = {"id" : data.categoryId, "name" : categoryName};
+  newWork.imageUrl = data.imageUrl;
   worksData.push(newWork);
+}
+
+function sendNewData(token, formData, title, categoryName) {
+  fetch(`${baseApiUrl}works`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        alert("Nouveau fichier envoyé avec succés : " + title);
+        return response.json();
+      } else {
+        console.error("Erreur:", response.status);
+      }
+    })
+    .then ((data) => {
+      addToWorksData(data, categoryName);
+      displayGallery(worksData);
+      document.querySelector(".modal").style.display = "none";
+      document.removeEventListener("click", closeModal);
+      modalStep = null;
+    })
+    .catch((error) => console.error("Erreur:", error));
 }
 
