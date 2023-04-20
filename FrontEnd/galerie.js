@@ -292,6 +292,7 @@ const selectCategoryForm = function () {
     option.value = categorie.name;
     option.innerText = categorie.name;
     option.id = categorie.id;
+    option.style.fontFamily = "Work Sans";
     document.querySelector("#selectCategory").appendChild(option);
   });
 };
@@ -340,8 +341,7 @@ const formValidation = function(image, title, categoryId) {
     alert("Veuillez ajouter une image");
     return false;
   }
-  if (title == ""){
-    alert("Veuillez ajouter un titre");
+  if (title == ""){    alert("Veuillez ajouter un titre");
     return false;
   }
   if (categoryId == ""){

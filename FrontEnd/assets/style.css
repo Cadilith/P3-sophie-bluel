@@ -429,13 +429,21 @@ footer nav ul {
 #title {
 	margin-bottom: 11px;
 }
-#selectCategory {
+select {
 	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
 	background-image: url(./icons/chevron-down.png);
 	background-repeat: no-repeat;
 	background-position: center right;
 	background-origin: content-box;
 	padding-right: 20px;
+	background-color: #FFFFFF;
+}
+option {
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
 }
 #photo {
 	width: 0.1px;
