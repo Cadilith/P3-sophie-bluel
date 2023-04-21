@@ -169,12 +169,15 @@ li:hover {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
+	grid-auto-rows: 1fr;
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 	margin-top: 5em;
 }
 .gallery img, .miniWork img {
 	width: 100%;
+	object-fit: cover;
+	height: 92%;
 
 }
 #contact, #login {
@@ -219,7 +222,7 @@ li:hover {
 	margin-bottom: 50px;
 }
 
-input[type="submit"]{
+input[type="submit"], #addPictureBtn {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -334,6 +337,7 @@ footer nav ul {
 #editGallery .modalContent {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-auto-rows: 1fr;
 	grid-column-gap: 8px;
 	grid-row-gap: 10px;
 }

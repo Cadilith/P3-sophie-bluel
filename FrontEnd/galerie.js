@@ -56,12 +56,14 @@ function displayGallery(data) {
 //get list of categories in array as unique objects
 function listOfUniqueCategories() {
   let listOfCategories = new Set();
+  //get set of string categories
   worksData.forEach((work) => {
     listOfCategories.add(JSON.stringify(work.category));
   });
-  //delete non unique objects
-  const strings = [...listOfCategories];
-  categories = strings.map((s) => JSON.parse(s));
+  //push stringified categories in array
+  const arrayOfStrings = [...listOfCategories];
+  //parse array to get objects back
+  categories = arrayOfStrings.map((s) => JSON.parse(s));
 }
 
 
@@ -341,7 +343,8 @@ const formValidation = function(image, title, categoryId) {
     alert("Veuillez ajouter une image");
     return false;
   }
-  if (title == ""){    alert("Veuillez ajouter un titre");
+  if (title.trim().length == 0){    
+    alert("Veuillez ajouter un titre");
     return false;
   }
   if (categoryId == ""){
