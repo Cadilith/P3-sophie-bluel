@@ -332,7 +332,7 @@ function postNewWork() {
 //change submit button color if all fields are filled
 const changeSubmitBtnColor = function() {
   const select = document.getElementById("selectCategory");
-  if (document.getElementById("title").value !== "" && document.getElementById("photo").files[0] !== "" && select.options[select.selectedIndex].id !== "") {
+  if (document.getElementById("title").value !== "" && document.getElementById("photo").files[0] !== undefined && select.options[select.selectedIndex].id !== "") {
     document.querySelector("#valider").style.backgroundColor = "#1D6154";
   }
 }
