@@ -95,6 +95,7 @@ h2{
 }
 button, input[type="submit"] {
 	cursor: pointer;
+	height: 39px;
 }
 input[type="text"], option, textarea, input[type="email"], #selectCategory {
 	font-family: 'Work Sans';
@@ -150,6 +151,20 @@ li:hover {
 	justify-content: center;
 	gap: 10px;
 }
+input[type="submit"], button {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+	font-size: 1.2em;
+	height: 39px;
+	border: none;
+	display: block;
+}
 .filterButton, .filterButtonAll, #browsePictures {
 	padding: 10px 20px;
 	border-radius: 60px;
@@ -160,6 +175,8 @@ li:hover {
 	font-weight: 700;
 	font-size: 16px;
 	text-align: center;
+	margin: 0;
+	width: auto;
 }
 .filterButton:hover, .filterButton:focus, .filterButtonAll:hover, .filterButtonAll:focus {
 	background-color: #1D6154;
@@ -197,7 +214,7 @@ li:hover {
 	display: flex;
 	flex-direction: column;
 }
-#contact input, #login input, .modal input, #selectCategory {
+#contact input:not([type="submit"]), #login input:not([type="submit"]), .modal input:not([type="submit"]), #selectCategory {
 	height: 50px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
@@ -221,19 +238,6 @@ li:hover {
 	margin-top: 50px;
 	margin-bottom: 50px;
 }
-
-input[type="submit"], #addPictureBtn {
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-	font-size: 1.2em;
-}
-
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
@@ -265,6 +269,9 @@ footer nav ul {
 	font-size: 14px;
 	font-weight: 600;
 	border-radius: 60px;
+	width: auto;
+	margin: 0;
+	font-family: "Work Sans";
 }
 .editBtn {
 	padding: 15px 0;
@@ -413,6 +420,8 @@ footer nav ul {
 }
 #picturePreview img {
 	height: 100%;
+	width: 31%;
+	object-fit: cover;
 }
 #browsePictures  {
 	font-family: 'Work Sans';
