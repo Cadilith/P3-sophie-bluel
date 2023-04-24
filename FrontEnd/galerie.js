@@ -19,9 +19,9 @@ window.onload = () => {
       //get list of categories
       listOfUniqueCategories();
       //display all works
-      filter = document.querySelector(".filter");
       displayGallery(worksData);
       //Filter functionnality
+      filter = document.querySelector(".filter");
       categoryFilter(categories, filter);
       //administrator mode
       adminUserMode(filter);
@@ -294,7 +294,6 @@ const selectCategoryForm = function () {
     option.value = categorie.name;
     option.innerText = categorie.name;
     option.id = categorie.id;
-    option.style.fontFamily = "Work Sans";
     document.querySelector("#selectCategory").appendChild(option);
   });
 };
