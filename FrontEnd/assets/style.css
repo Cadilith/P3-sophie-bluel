@@ -177,6 +177,7 @@ input[type="submit"], button {
 	text-align: center;
 	margin: 0;
 	width: auto;
+	box-sizing: border-box;
 }
 .filterButton:hover, .filterButton:focus, .filterButtonAll:hover, .filterButtonAll:focus {
 	background-color: #1D6154;

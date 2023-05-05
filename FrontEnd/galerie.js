@@ -364,6 +364,7 @@ const addToWorksData = function(data, categoryName) {
   worksData.push(newWork);
 }
 
+//API call for new work
 function sendNewData(token, formData, title, categoryName) {
   fetch(`${baseApiUrl}works`, {
     method: "POST",
